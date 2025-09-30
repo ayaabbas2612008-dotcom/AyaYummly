@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "37296038504",
+    "project_id": "aya12app",
+    "storage_bucket": "aya12app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37296038504:android:7bcd6272b0225fcbab91dd",
+        "android_client_info": {
+          "package_name": "com.example.ayayummly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr7MNO6zkCJ5H3a9fiPoYuop7xUB4szDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
