@@ -27,6 +27,7 @@ public class LoginFragment extends Fragment {
 
     private EditText etUsername, etPassword;
     private TextView tvSignupLink;
+    private TextView tvForgotLink;
     private Button btnLogin;
     private FirebaseServices fbs;
 
@@ -93,6 +94,11 @@ public class LoginFragment extends Fragment {
                 gotoSignupFragment();
             }
         });
+        tvForgotLink = getView().findViewById(R.id.tvForgotPasswordLogin);
+        tvForgotLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {gotoForgotFragment();}
+        });
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,5 +139,10 @@ public class LoginFragment extends Fragment {
         ft.replace(R.id.frameLayoutMain, new SignupFragment());
         ft.commit();
     }
+    private void gotoForgotFragment() {
 
+        FragmentTransaction ft1 = getActivity().getSupportFragmentManager().beginTransaction();
+        ft1.replace(R.id.frameLayoutMain, new ForgotPasswordFragment());
+        ft1.commit();
+    }
 }
