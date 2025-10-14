@@ -32,4 +32,16 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.frameLayoutMain, new LoginFragment());
         ft.commit();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        gotoAddRecipeFragment();
+    }
+
+    private void gotoAddRecipeFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frameLayoutMain, new AddRecipeFragment());
+        ft.commit();
+    }
 }

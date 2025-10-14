@@ -2,11 +2,19 @@ package com.example.ayayummly;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +22,14 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class AddRecipeFragment extends Fragment {
+
+    private EditText etCooker, etNameR, etDesc, etPriceR;
+    private Button btnSaveR;
+    private  FirebaseServices fbs;
+
+
+
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,5 +77,51 @@ public class AddRecipeFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_recipe, container, false);
     }
-}
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        connectComponents();
+    }
+    private void connectComponents(){
+        etCooker = getActivity().findViewById(R.id.etCook);
+        etNameR = getActivity().findViewById(R.id.etName);
+        etDesc = getActivity().findViewById(R.id.etDescription);
+        etPriceR = getActivity().findViewById(R.id.etPrice);
+        fbs = FirebaseServices.getInstance();
+        btnSaveR = getActivity().findViewById(R.id.btnSave);
+        btnSaveR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String cook, name, description, price;
+                cook = etCooker.getText().toString();
+                name = etNameR.getText().toString();
+                description = etDesc.getText().toString();
+                price = etPriceR.getText().toString();
 
+                if (cook.trim().isEmpty() || name.trim().isEmpty() ||
+                        description.trim().isEmpty() || price.trim().isEmpty() ){
+                    Toast.makeText(getActivity(), "Some fields are empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Recipe recipe = new Recipe(cook, name, description, Double.parseDouble(price));
+                fbs.getFire().collection( "recipes").add(recipe).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        //what to do in success
+                        Toast.makeText(getActivity(), "Nice", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //what to do in failure
+                        Toast.makeText(getActivity(), "Not Nice", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        });
+    }
+
+}
