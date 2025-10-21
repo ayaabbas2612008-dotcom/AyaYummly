@@ -1,15 +1,22 @@
 package com.example.ayayummly;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,9 +33,15 @@ public class AddRecipeFragment extends Fragment {
     private EditText etCooker, etNameR, etDesc, etPriceR;
     private Button btnSaveR;
     private  FirebaseServices fbs;
+    private ImageView imageViewAddRecipe;
 
-
-
+    private final ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+            Uri imageUri = result.getData().getData();
+            imageViewAddRecipe.setImageURI(imageUri);
+        }
+    });
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -62,6 +75,7 @@ public class AddRecipeFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +102,8 @@ public class AddRecipeFragment extends Fragment {
         etNameR = getActivity().findViewById(R.id.etName);
         etDesc = getActivity().findViewById(R.id.etDescription);
         etPriceR = getActivity().findViewById(R.id.etPrice);
+        imageViewAddRecipe = getView().findViewById(R.id.imageView);
+        imageViewAddRecipe.setOnClickListener(v -> openGallery());
         fbs = FirebaseServices.getInstance();
         btnSaveR = getActivity().findViewById(R.id.btnSave);
         btnSaveR.setOnClickListener(new View.OnClickListener() {
@@ -124,4 +140,10 @@ public class AddRecipeFragment extends Fragment {
         });
     }
 
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickImageLauncher.launch(intent);
+    }
+
 }
+
