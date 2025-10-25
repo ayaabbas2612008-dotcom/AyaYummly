@@ -88,8 +88,12 @@ public class AddRecipeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_recipe, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_recipe, container, false);
+
+        imageViewAddRecipe = view.findViewById(R.id.imageView);
+        imageViewAddRecipe.setOnClickListener(v -> openGallery());
+
+        return view;
     }
     @Override
     public void onStart()
@@ -102,8 +106,6 @@ public class AddRecipeFragment extends Fragment {
         etNameR = getActivity().findViewById(R.id.etName);
         etDesc = getActivity().findViewById(R.id.etDescription);
         etPriceR = getActivity().findViewById(R.id.etPrice);
-        imageViewAddRecipe = getView().findViewById(R.id.imageView);
-        imageViewAddRecipe.setOnClickListener(v -> openGallery());
         fbs = FirebaseServices.getInstance();
         btnSaveR = getActivity().findViewById(R.id.btnSave);
         btnSaveR.setOnClickListener(new View.OnClickListener() {
@@ -126,13 +128,13 @@ public class AddRecipeFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         //what to do in success
-                        Toast.makeText(getActivity(), "Nice", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Nice, you did it! Congratulations!", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         //what to do in failure
-                        Toast.makeText(getActivity(), "Not Nice", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Not Nice, try again", Toast.LENGTH_SHORT).show();
                     }
                 });
 
