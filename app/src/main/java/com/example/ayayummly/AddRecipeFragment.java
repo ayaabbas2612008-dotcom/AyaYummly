@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.ayayummly.classes.FirebaseServices;
+import com.example.ayayummly.classes.Recipe;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,7 +34,7 @@ public class AddRecipeFragment extends Fragment {
 
     private EditText etCooker, etNameR, etDesc, etPriceR;
     private Button btnSaveR;
-    private  FirebaseServices fbs;
+    private FirebaseServices fbs;
     private ImageView imageViewAddRecipe;
 
     private final ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),

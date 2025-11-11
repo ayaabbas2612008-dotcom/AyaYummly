@@ -1,4 +1,4 @@
-package com.example.ayayummly;
+package com.example.ayayummly.classes;
 
 import android.net.Uri;
 

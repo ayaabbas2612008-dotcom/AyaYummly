@@ -1,4 +1,4 @@
-package com.example.ayayummly;
+package com.example.ayayummly.classes;
 
 public class Recipe {
     private String cook;
