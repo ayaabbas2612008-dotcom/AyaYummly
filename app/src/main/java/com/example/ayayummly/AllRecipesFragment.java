@@ -47,6 +47,10 @@ public class AllRecipesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_all_recipes, container, false);
     }
 
+    public void onStart() {
+        super.onStart();
+        init();
+    }
 
     private void init() {
         recipes = new ArrayList<>();
@@ -87,5 +91,6 @@ public class AllRecipesFragment extends Fragment {
 
         return recipes;
     }
+
 
 }
