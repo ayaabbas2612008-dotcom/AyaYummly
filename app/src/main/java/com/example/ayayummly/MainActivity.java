@@ -21,9 +21,6 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        gotoLoginFragment();
-
     }
 
     private void gotoLoginFragment() {
@@ -36,12 +33,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        gotoAddRecipeFragment();
+        gotoAdminFragment();
     }
 
     private void gotoAddRecipeFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frameLayoutMain, new AddRecipeFragment());
+        ft.commit();
+    }
+
+    private void gotoAdminFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frameLayoutMain, new AdminFragment());
         ft.commit();
     }
 }

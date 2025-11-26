@@ -2,4 +2,27 @@
     <string name="app_name">AyaYummly</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- نصوص الـ Spinners -->
+    <string-array name="categories_array">
+        <item>Select Category</item>
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Dessert</item>
+        <item>Drinks</item>
+        <item>Snacks</item>
+        <item>Salads</item>
+        <item>Soups</item>
+        <item>Baking</item>
+        <item>Other...</item>
+    </string-array>
+
+    <string-array name="difficulties_array">
+        <item>Select Difficulty</item>
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+        <item>Expert</item>
+        <item>Other...</item>
+    </string-array>
 </resources>

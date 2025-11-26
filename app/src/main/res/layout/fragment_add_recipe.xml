@@ -1,89 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddRecipeFragment">
+    android:fillViewport="true"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
+        <!-- Recipe Name -->
         <EditText
-            android:id="@+id/etCook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="52dp"
-            android:layout_marginBottom="304dp"
-            android:ems="10"
-            android:hint="cook"
-            android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/etRecipeName"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:hint="Recipe Name"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="16sp"
+            android:backgroundTint="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Cook Name -->
         <EditText
-            android:id="@+id/etName"
+            android:id="@+id/etCookName"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:hint="Cook Name"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/etRecipeName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp" />
+
+        <!-- Category & Difficulty (side-by-side) -->
+        <Spinner
+            android:id="@+id/spCategory"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:minHeight="48dp"
+            app:layout_constraintTop_toBottomOf="@id/etCookName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/spDifficulty"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp" />
+
+        <Spinner
+            android:id="@+id/spDifficulty"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:minHeight="48dp"
+            app:layout_constraintTop_toBottomOf="@id/etCookName"
+            app:layout_constraintStart_toEndOf="@id/spCategory"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="8dp" />
+
+        <!-- Rating -->
+        <RatingBar
+            android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="2dp"
-            android:ems="10"
-            android:hint="Name"
-            android:inputType="text"
-            app:layout_constraintEnd_toEndOf="@+id/etCook"
-            app:layout_constraintTop_toBottomOf="@+id/etCook" />
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:layout_marginTop="14dp"
+            app:layout_constraintTop_toBottomOf="@id/spCategory"
+            app:layout_constraintStart_toStartOf="parent" />
 
+        <!-- Prep Time -->
+        <EditText
+            android:id="@+id/etPrepTime"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:hint="Prep Time (minutes)"
+            android:inputType="number"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/ratingBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Cook Time -->
+        <EditText
+            android:id="@+id/etCookTime"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:hint="Cook Time (minutes)"
+            android:inputType="number"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/etPrepTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Description (multi-line) -->
         <EditText
             android:id="@+id/etDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="23dp"
-            android:ems="10"
-            android:hint="Description"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/etName"
-            app:layout_constraintTop_toBottomOf="@+id/etName" />
-
-        <EditText
-            android:id="@+id/etPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:ems="10"
-            android:hint="Price"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/etDescription"
-            app:layout_constraintTop_toBottomOf="@+id/etDescription" />
-
-
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="304dp"
-            android:text="Save"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.17"
+            android:hint="Ingredients and Preparation"
+            android:inputType="textMultiLine"
+            android:minLines="5"
+            android:gravity="top|start"
+            android:padding="12dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/etCookTime"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etPrice" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Notes (multi-line) -->
+        <EditText
+            android:id="@+id/etNotes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Notes (optional)"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:gravity="top|start"
+            android:padding="12dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/etDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Image preview centered -->
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="200dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="123dp"
-            android:contentDescription="Image preview"
-            android:src="@android:drawable/ic_menu_gallery"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etCook" />
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
 
+            android:contentDescription="Image Preview"
+
+            android:layout_marginTop="18dp"
+
+            android:background="@android:color/darker_gray"
+
+            app:layout_constraintTop_toBottomOf="@id/etNotes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+        <!-- Choose Image button -->
+        <Button
+            android:id="@+id/btnChooseImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Image"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/imageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Save Button (full width, prominent) -->
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="Save Recipe"
+            android:layout_marginTop="18dp"
+            android:backgroundTint="@android:color/holo_purple"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@id/btnChooseImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</ScrollView>
