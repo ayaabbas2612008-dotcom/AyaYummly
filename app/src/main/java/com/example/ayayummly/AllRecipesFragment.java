@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.ayayummly.classes.AllRecipesAdapter;
@@ -58,7 +59,10 @@ public class AllRecipesFragment extends Fragment {
     private void init() {
 
         recyclerView = getView().findViewById(R.id.rvRecipeList);
+        Button btnAddRecipe = getView().findViewById(R.id.btnAddRecipe);
+
         fbs = FirebaseServices.getInstance();
+        //fbs.setUserChangeFlag(false);
         recipes = new ArrayList<>();
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -66,28 +70,42 @@ public class AllRecipesFragment extends Fragment {
         myAdapter = new AllRecipesAdapter(getActivity(), recipes);
         filteredList = new ArrayList<>();
 
-        /*
-        //هاي بدون التفاصيل
-        myAdapter.setOnItemClickListener(new AllRecipesAdapter.OnItemClickListener() {
+        // فتح صفحة إضافة وصفة
+        btnAddRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(int position) {
-                String selectedRecipe = recipes.get(position).getRecipeName();
-                Toast.makeText(getActivity(), "Clicked: " + selectedRecipe, Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                FragmentTransaction ft = getActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction();
 
-                // ما في فتح لصفحة التفاصيل
+                ft.replace(R.id.frameLayout, new AddRecipeFragment());
+                ft.addToBackStack(null);
+                ft.commit();
             }
-        });*/
+        });
 
 
-        /*
-        //  ضل تاع التفاصيل الديتايلز
-        //هاي مع التفاصيل بش ضل ابني صفحة التفاصيل كفراجمينت
+
+
+        //هاي بدون التفاصيل
+        // كود الضغط على العناصر
         myAdapter.setOnItemClickListener(new AllRecipesAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                // Handle recipe item click here
+                // Handle item click here
+                // ما في فتح لصفحة التفاصيل
                 String selectedRecipe = recipes.get(position).getRecipeName();
                 Toast.makeText(getActivity(), "Clicked: " + selectedRecipe, Toast.LENGTH_SHORT).show();
+
+                //هضول جزء من تعون التفاصيل
+                Bundle args = new Bundle();
+
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+
+                ft.commit();
+
+                //هاي مع التفاصيل بس ضل ابني صفحة التفاصيل كفراجمينت
+                 /*
 
                 Bundle args = new Bundle();
                 args.putParcelable("recipe", recipes.get(position)); // تأكدي إنه الكلاس Recipe implements Parcelable
@@ -98,8 +116,30 @@ public class AllRecipesFragment extends Fragment {
                 ft.replace(R.id.frameLayout, recipeDetails);
                 ft.addToBackStack(null); // مهم عشان ترجعي للقائمة
                 ft.commit();
+           //وهاي الي تحت هون هي تاعت الاستاذ:
+
+        myAdapter.setOnItemClickListener(new CarListAdapter2.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                // Handle item click here
+                String selectedItem = cars.get(position).getNameCar();
+                Toast.makeText(getActivity(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
+                Bundle args = new Bundle();
+                args.putParcelable("car", cars.get(position)); // or use Parcelable for better performance
+                CarDetailsFragment cd = new CarDetailsFragment();
+                cd.setArguments(args);
+                FragmentTransaction ft=getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameLayout,cd);
+                ft.commit();
             }
-        });*/
+        });
+
+               */
+                //ملاحظة انا مش عاملة هون ولا السيرتش ولا البروفايل ولا الاشياء الي الاستاذ عاملهن بالوي كار
+            }
+        });
+
+
 
     }
 
@@ -134,7 +174,7 @@ public class AllRecipesFragment extends Fragment {
             ArrayList<Recipe> recipes = new ArrayList<>();
             try {
             recipes.clear();
-            fbs.getFire().collection("recipes2")
+            fbs.getFire().collection("recipes")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -146,9 +186,11 @@ public class AllRecipesFragment extends Fragment {
 
                                 AllRecipesAdapter adapter = new AllRecipesAdapter(getActivity(), recipes);
                                 recyclerView.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
                                 //addUserToCompany(companies, user);
                             } else {
                                 //Log.e("AllRestActivity: readData()", "Error getting documents.", task.getException());
+                                Toast.makeText(getActivity(), "Error loading recipes", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -156,6 +198,7 @@ public class AllRecipesFragment extends Fragment {
             catch (Exception e)
             {
             Log.e("getCompaniesMap(): ", e.getMessage());
+            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             return recipes;

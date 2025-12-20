@@ -1,6 +1,11 @@
 package com.example.ayayummly.classes;
 
-public class Recipe {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+public class Recipe implements Parcelable {
 
     private String recipeName;
     private String cookName;
@@ -12,8 +17,6 @@ public class Recipe {
     private String description;
     private String notes;
     private String imageUri;
-
-
 
     public Recipe() {
     }
@@ -33,6 +36,33 @@ public class Recipe {
         this.notes = notes;
         this.imageUri = imageUri;
     }
+
+    // Constructor from Parcel
+    protected Recipe(Parcel in) {
+        recipeName = in.readString();
+        cookName = in.readString();
+        category = in.readString();
+        difficulty = in.readString();
+        rating = in.readFloat();
+        prepTime = in.readInt();
+        cookTime = in.readInt();
+        description = in.readString();
+        notes = in.readString();
+        imageUri = in.readString();
+    }
+
+    // CREATOR
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     // Getters
     public String getRecipeName() { return recipeName; }
@@ -74,8 +104,23 @@ public class Recipe {
                 '}';
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    // Write all fields to Parcel
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(recipeName);
+        dest.writeString(cookName);
+        dest.writeString(category);
+        dest.writeString(difficulty);
+        dest.writeFloat(rating);
+        dest.writeInt(prepTime);
+        dest.writeInt(cookTime);
+        dest.writeString(description);
+        dest.writeString(notes);
+        dest.writeString(imageUri);
+    }
 }
-
-
-
-

@@ -30,11 +30,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AddRecipeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class AddRecipeFragment extends Fragment {
 
     private static final int GALLERY_REQUEST_CODE = 1001;
@@ -44,7 +40,6 @@ public class AddRecipeFragment extends Fragment {
     ImageView imageViewAddRecipe;
     private Button btnSave;
     private FirebaseServices fbs;
-    private String imageUri = null;
     private Utils utils;
 
     String[] categories = {
@@ -71,55 +66,19 @@ public class AddRecipeFragment extends Fragment {
     };
 
 
-
     private final ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
-        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-            Uri imageUri = result.getData().getData();
-            imageViewAddRecipe.setImageURI(imageUri);
-        }
-    });
-
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public AddRecipeFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddRecipeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddRecipeFragment newInstance(String param1, String param2) {
-        AddRecipeFragment fragment = new AddRecipeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    imageViewAddRecipe.setImageURI(imageUri);
+                    utils.uploadImage(getActivity(), imageUri);
+                }
+            });
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -134,17 +93,13 @@ public class AddRecipeFragment extends Fragment {
     }
 
 
-
-
-
-
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         init();
     }
-    private void init(){
+
+    private void init() {
         fbs = FirebaseServices.getInstance();
         utils = Utils.getInstance();
         etRecipeName = getView().findViewById(R.id.etRecipeName);
@@ -158,9 +113,10 @@ public class AddRecipeFragment extends Fragment {
         ratingBar = getView().findViewById(R.id.ratingBar);
         btnSave = getView().findViewById(R.id.btnSave);
         imageViewAddRecipe = getView().findViewById(R.id.imageView);
+        Button btnChooseImage = getView().findViewById(R.id.btnChooseImage);
+
 
         setupSpinners(); // منادي على الدالة عشان تشتغل الـ Spinners
-
 
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -172,6 +128,8 @@ public class AddRecipeFragment extends Fragment {
             }
         });
         imageViewAddRecipe.setOnClickListener(v -> openGallery());
+        btnChooseImage.setOnClickListener(v -> openGallery());
+
     }
 
 
@@ -223,7 +181,7 @@ public class AddRecipeFragment extends Fragment {
 
     }
 
-    private void addToFirestore(){
+    private void addToFirestore() {
         // === 1. Read all fields ===
         String recipeName = etRecipeName.getText().toString().trim();
         String cookName = etCookName.getText().toString().trim();
@@ -243,11 +201,13 @@ public class AddRecipeFragment extends Fragment {
         // Convert numbers safely
         try {
             prepTime = Integer.parseInt(etPrepTime.getText().toString());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         try {
             cookTime = Integer.parseInt(etCookTime.getText().toString());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         // === 2. Validate required fields ===
         if (recipeName.isEmpty() || cookName.isEmpty() || description.isEmpty()) {
@@ -266,19 +226,35 @@ public class AddRecipeFragment extends Fragment {
             return;
         }
 
-        // === 3. Create Recipe object ===
-        Recipe recipe = new Recipe(
-                recipeName,
-                cookName,
-                category,
-                difficulty,
-                rating,
-                prepTime,
-                cookTime,
-                description,
-                notes,
-                imageUri
-        );
+        Recipe recipe;
+        if (fbs.getSelectedImageURL() == null) {
+            // === 3. Create Recipe object ===
+            recipe = new Recipe(
+                    recipeName,
+                    cookName,
+                    category,
+                    difficulty,
+                    rating,
+                    prepTime,
+                    cookTime,
+                    description,
+                    notes,
+                    ""
+            );
+        } else {
+            recipe = new Recipe(
+                    recipeName,
+                    cookName,
+                    category,
+                    difficulty,
+                    rating,
+                    prepTime,
+                    cookTime,
+                    description,
+                    notes,
+                    fbs.getSelectedImageURL().toString()
+            );
+        }
 
         // === 4. Upload to Firebase ===
         fbs.getFire().collection("recipes")
@@ -317,10 +293,16 @@ public class AddRecipeFragment extends Fragment {
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickImageLauncher.launch(intent);
+
     }
 
+
+}
+
+    //يمكن هاي العملية ملهاش عازة لانه في عنا عملية اوبن جلاري وprivate final ActivityResultLauncher
 //هاض الكود دبكراتتد هيك اشي انه جوجل كان ها الكود الها بس هي خلص طلعته من مسؤليتها واخترعت كود جديد بس الكود بشتغل وكلو تمام فخلص
-    @Override
+
+/*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -330,5 +312,7 @@ public class AddRecipeFragment extends Fragment {
             utils.uploadImage(getActivity(), selectedImageUri);
         }
     }
-}
+
+    */
+
 
