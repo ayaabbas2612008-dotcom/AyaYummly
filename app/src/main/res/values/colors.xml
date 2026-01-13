@@ -12,5 +12,19 @@
 
         <!-- ألوان إضافية لتطبيق الوصفات -->
         <color name="secondary_color">#FFFF9800</color>
+    <color name="bg_beige">#F3E9DD</color>
+    <color name="beige_mid">#DCCFBE</color>
+    <color name="beige_card">#E8DCCB</color>
+    <color name="beige_line">#CBB8A3</color>
+    <color name="beige_gold">#C9B49A</color>
+
+    <color name="brown_dark">#A06C3A</color>
+    <color name="text_dark">#3A3A3A</color>
+    <color name="text_mid">#5A5A5A</color>
+
+    <color name="green_dark">#5E8C61</color>
+    <color name="gold">#F4C430</color> <!-- ذهبي ناعم -->
+    <color name="text_light">#8C6E5A</color>
+    <color name="red">#8C2F2F</color>
 
 </resources>

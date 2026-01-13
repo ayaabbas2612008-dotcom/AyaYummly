@@ -25,4 +25,40 @@
         <item>Expert</item>
         <item>Other...</item>
     </string-array>
+
+
+    <string name="title_recipe">🍗 Creamy Chicken with Herbs</string>
+    <string name="chef_name">🧑‍🍳 Aya Yummly</string>
+    <string name="category_main_dish">🍽 Main Dish</string>
+
+    <string name="prep_time">⏱ Prep: 10m</string>
+    <string name="cook_time">🔥 Cook: 20m</string>
+    <string name="total_time">🕒 Total: 30m</string>
+
+    <string name="level_easy">⚡ Level: Easy</string>
+    <string name="serves_two">🍽 Serves: 2</string>
+
+    <string name="ingredients_title">🧂 Ingredients</string>
+    <string name="ingredients_list">
+        - 2 chicken breasts\n- 200 ml cream\n- Olive oil\n- Herbs\n- Parsley and tomatoes
+    </string>
+
+    <string name="steps_title">📖 Steps</string>
+    <string name="steps_list">
+        1. Season chicken.\n2. Cook in oil.\n3. Add cream.\n4. Simmer.\n5. Serve.
+    </string>
+
+    <string name="notes_title">🧑‍🍳 Chef Notes</string>
+    <string name="notes_text">💡 Tip: Best served with white rice or mashed potatoes.</string>
+
+    <string name="start_cooking">🚀 Start Cooking</string>
+
+    <string name="desc_recipe_image">Recipe image</string>
+    <string name="desc_favorite">Add to favorites</string>
+    <string name="desc_share">Share recipe</string>
+    <string name="cooking_tip">💡 Prep makes perfect!</string>
+
+
+
+
 </resources>

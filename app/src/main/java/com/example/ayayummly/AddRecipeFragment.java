@@ -34,7 +34,8 @@ import com.google.firebase.firestore.DocumentReference;
 public class AddRecipeFragment extends Fragment {
 
     private static final int GALLERY_REQUEST_CODE = 1001;
-    private EditText etRecipeName, etCookName, etPrepTime, etCookTime, etDescription, etNotes;
+    private EditText etRecipeName, etCookName, etPrepTime, etCookTime,  etNotes;
+    private EditText etServings, etIngredients, etSteps;
     Spinner spCategory, spDifficulty;
     private RatingBar ratingBar;
     ImageView imageViewAddRecipe;
@@ -106,7 +107,9 @@ public class AddRecipeFragment extends Fragment {
         etCookName = getView().findViewById(R.id.etCookName);
         etPrepTime = getView().findViewById(R.id.etPrepTime);
         etCookTime = getView().findViewById(R.id.etCookTime);
-        etDescription = getView().findViewById(R.id.etDescription);
+        etServings = getView().findViewById(R.id.etServings);
+        etIngredients = getView().findViewById(R.id.etIngredients);
+        etSteps = getView().findViewById(R.id.etSteps);
         etNotes = getView().findViewById(R.id.etNotes);
         spCategory = getView().findViewById(R.id.spCategory);
         spDifficulty = getView().findViewById(R.id.spDifficulty);
@@ -185,7 +188,9 @@ public class AddRecipeFragment extends Fragment {
         // === 1. Read all fields ===
         String recipeName = etRecipeName.getText().toString().trim();
         String cookName = etCookName.getText().toString().trim();
-        String description = etDescription.getText().toString().trim();
+        String servings = etServings.getText().toString().trim();
+        String ingredients = etIngredients.getText().toString().trim();
+        String steps = etSteps.getText().toString().trim();
         String notes = etNotes.getText().toString().trim();
         String category = spCategory.getSelectedItem().toString();
         String difficulty = spDifficulty.getSelectedItem().toString();
@@ -210,7 +215,7 @@ public class AddRecipeFragment extends Fragment {
         }
 
         // === 2. Validate required fields ===
-        if (recipeName.isEmpty() || cookName.isEmpty() || description.isEmpty()) {
+        if (recipeName.isEmpty() || cookName.isEmpty() ) {
             Toast.makeText(getActivity(), "Please fill all required fields!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -237,10 +242,13 @@ public class AddRecipeFragment extends Fragment {
                     rating,
                     prepTime,
                     cookTime,
-                    description,
+                    ingredients,
+                    steps,
+                    servings,
                     notes,
                     ""
             );
+
         } else {
             recipe = new Recipe(
                     recipeName,
@@ -250,7 +258,9 @@ public class AddRecipeFragment extends Fragment {
                     rating,
                     prepTime,
                     cookTime,
-                    description,
+                    ingredients,
+                    steps,
+                    servings,
                     notes,
                     fbs.getSelectedImageURL().toString()
             );
@@ -273,22 +283,27 @@ public class AddRecipeFragment extends Fragment {
                     }
                 });
     }
-
     private void clearForm() {
         etRecipeName.setText("");
         etCookName.setText("");
         etPrepTime.setText("");
         etCookTime.setText("");
-        etDescription.setText("");
+        etServings.setText("");
+        etIngredients.setText("");
+        etSteps.setText("");
         etNotes.setText("");
+
         ratingBar.setRating(3.0f);
         spCategory.setSelection(0);
         spDifficulty.setSelection(0);
+
         imageViewAddRecipe.setImageResource(android.R.drawable.ic_menu_gallery);
 
         // مسح الصورة المختارة
         fbs.setSelectedImageURL(null);
     }
+
+
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

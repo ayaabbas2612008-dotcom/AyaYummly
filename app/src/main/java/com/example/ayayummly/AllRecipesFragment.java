@@ -87,54 +87,26 @@ public class AllRecipesFragment extends Fragment {
 
 
 
-        //هاي بدون التفاصيل
+        //هاي مع التفاصيل
         // كود الضغط على العناصر
         myAdapter.setOnItemClickListener(new AllRecipesAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 // Handle item click here
-                // ما في فتح لصفحة التفاصيل
                 String selectedRecipe = recipes.get(position).getRecipeName();
                 Toast.makeText(getActivity(), "Clicked: " + selectedRecipe, Toast.LENGTH_SHORT).show();
 
                 //هضول جزء من تعون التفاصيل
                 Bundle args = new Bundle();
-
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-
-                ft.commit();
-
-                //هاي مع التفاصيل بس ضل ابني صفحة التفاصيل كفراجمينت
-                 /*
-
-                Bundle args = new Bundle();
-                args.putParcelable("recipe", recipes.get(position)); // تأكدي إنه الكلاس Recipe implements Parcelable
+                args.putParcelable("recipe", recipes.get(position));
                 RecipeDetailsFragment recipeDetails = new RecipeDetailsFragment();
                 recipeDetails.setArguments(args);
 
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.frameLayout, recipeDetails);
-                ft.addToBackStack(null); // مهم عشان ترجعي للقائمة
-                ft.commit();
-           //وهاي الي تحت هون هي تاعت الاستاذ:
-
-        myAdapter.setOnItemClickListener(new CarListAdapter2.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                // Handle item click here
-                String selectedItem = cars.get(position).getNameCar();
-                Toast.makeText(getActivity(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
-                Bundle args = new Bundle();
-                args.putParcelable("car", cars.get(position)); // or use Parcelable for better performance
-                CarDetailsFragment cd = new CarDetailsFragment();
-                cd.setArguments(args);
                 FragmentTransaction ft=getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.frameLayout,cd);
+                ft.replace(R.id.frameLayout,recipeDetails);
+                // ft.addToBackStack(null); // مهم عشان ترجعي للقائمة
                 ft.commit();
-            }
-        });
 
-               */
                 //ملاحظة انا مش عاملة هون ولا السيرتش ولا البروفايل ولا الاشياء الي الاستاذ عاملهن بالوي كار
             }
         });
@@ -144,27 +116,7 @@ public class AllRecipesFragment extends Fragment {
     }
 
 
-    /*
-    //هاي اصلا لازم احطها بصفحة فراجمن اسمها ريسيبي ديتاليز ولازم اعمللها اكس ام ال
-    public class RecipeDetailsFragment extends Fragment {
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_recipe_details, container, false);
-        }
-
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-
-            if (getArguments() != null) {
-                Recipe recipe = getArguments().getParcelable("recipe");
-                // اربطي البيانات هنا
-            }
-        }
-    }
-    */
 
 
 
@@ -172,6 +124,7 @@ public class AllRecipesFragment extends Fragment {
         {
 
             ArrayList<Recipe> recipes = new ArrayList<>();
+
             try {
             recipes.clear();
             fbs.getFire().collection("recipes")
