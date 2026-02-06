@@ -26,5 +26,6 @@
     <color name="gold">#F4C430</color> <!-- ذهبي ناعم -->
     <color name="text_light">#8C6E5A</color>
     <color name="red">#8C2F2F</color>
+    <color name="beige_light">#F5E2C8</color>
 
 </resources>
