@@ -31,7 +31,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 
 
-public class AddRecipeFragment extends Fragment {
+public class  AddRecipeFragment extends Fragment {
 
     private static final int GALLERY_REQUEST_CODE = 1001;
     private EditText etRecipeName, etCookName, etPrepTime, etCookTime,  etNotes;
