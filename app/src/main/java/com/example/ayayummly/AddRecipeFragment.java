@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ public class  AddRecipeFragment extends Fragment {
     private Button btnSave;
     private FirebaseServices fbs;
     private Utils utils;
+    private ProgressBar progressBar;
+
 
     String[] categories = {
             "Select Category",
@@ -65,8 +68,36 @@ public class  AddRecipeFragment extends Fragment {
             "Expert",
             "Other..."
     };
+    private final ActivityResultLauncher<Intent> pickImageLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
 
+                            Uri imageUri = result.getData().getData();
+                            imageViewAddRecipe.setImageURI(imageUri);
 
+                            // تشغيل الدائرة
+                            progressBar.setVisibility(View.VISIBLE);
+                            btnSave.setEnabled(false);
+
+                            utils.uploadImage(getActivity(), imageUri, new Utils.ImageUploadCallback() {
+                                @Override
+                                public void onUploadSuccess(String url) {
+                                    progressBar.setVisibility(View.GONE);
+                                    btnSave.setEnabled(true);
+                                    fbs.setSelectedImageURL(Uri.parse(url));
+                                }
+
+                                @Override
+                                public void onUploadFailure(Exception e) {
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(getActivity(), "Upload failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+
+/*
     private final ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
@@ -75,7 +106,7 @@ public class  AddRecipeFragment extends Fragment {
                     utils.uploadImage(getActivity(), imageUri);
                 }
             });
-
+*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,6 +148,9 @@ public class  AddRecipeFragment extends Fragment {
         btnSave = getView().findViewById(R.id.btnSave);
         imageViewAddRecipe = getView().findViewById(R.id.imageView);
         Button btnChooseImage = getView().findViewById(R.id.btnChooseImage);
+        progressBar = getView().findViewById(R.id.progressBar);
+        btnSave.setEnabled(false); // زر الحفظ ممنوع يشتغل قبل رفع الصورة
+
 
 
         setupSpinners(); // منادي على الدالة عشان تشتغل الـ Spinners

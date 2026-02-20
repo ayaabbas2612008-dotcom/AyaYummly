@@ -17,6 +17,12 @@ import com.google.firebase.storage.UploadTask;
 import java.util.UUID;
 
 public class Utils  {
+
+    public interface ImageUploadCallback {
+        void onUploadSuccess(String url);
+        void onUploadFailure(Exception e);
+    }
+
     private static Utils instance;
 
     private FirebaseServices fbs;
@@ -52,7 +58,38 @@ public class Utils  {
         dialog.show();
     }
 
-    public void uploadImage(Context context, Uri selectedImageUri) {
+    public void uploadImage(Context context, Uri selectedImageUri, ImageUploadCallback callback) {
+        if (selectedImageUri != null) {
+
+            StorageReference imageRef = fbs.getStorage().getReference()
+                    .child("images/" + UUID.randomUUID().toString() + ".jpg");
+
+            imageRef.putFile(selectedImageUri)
+                    .addOnSuccessListener(taskSnapshot ->
+                            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+
+                                fbs.setSelectedImageURL(uri);
+                                callback.onUploadSuccess(uri.toString());
+
+                                Toast.makeText(context, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
+
+                            }).addOnFailureListener(e -> {
+                                Log.e("Utils: uploadImage", e.getMessage());
+                                callback.onUploadFailure(e);
+                            })
+                    )
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(context, "Failed to upload image", Toast.LENGTH_SHORT).show();
+                        callback.onUploadFailure(e);
+                    });
+
+        } else {
+            Toast.makeText(context, "Please choose an image first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+   /* public void uploadImage(Context context, Uri selectedImageUri) {
         if (selectedImageUri != null) {
             imageStr = "images/" + UUID.randomUUID() + ".jpg"; //+ selectedImageUri.getLastPathSegment();
             StorageReference imageRef = fbs.getStorage().getReference().child("images/" + selectedImageUri.getLastPathSegment());
@@ -85,4 +122,6 @@ public class Utils  {
             Toast.makeText(context, "Please choose an image first", Toast.LENGTH_SHORT).show();
         }
     }
+
+    */
 }
