@@ -81,7 +81,8 @@ public class AllRecipesAdapter  extends RecyclerView.Adapter<AllRecipesAdapter.M
             holder.tvDifficulty.setText(recipe.getDifficulty());
             // ⏱️ الوقت
             holder.tvPrepTime.setText(recipe.getPrepTime() + " min");
-            holder.tvCookTime.setText(recipe.getCookTime() + " min");            holder.ratingBar.setRating(recipe.getRating());
+            holder.tvCookTime.setText(recipe.getCookTime() + " min");
+            holder.ratingBar.setRating(recipe.getRating());
 
 //-----------------------------دفحص هاي------------------------------------------------
       /*
@@ -96,12 +97,21 @@ public class AllRecipesAdapter  extends RecyclerView.Adapter<AllRecipesAdapter.M
 
        */
 //-----------------------------دفحص هاي------------------------------------------------
+          /*
             // يربط الضغط على اسم الوصفة
             holder.tvRecipeName.setOnClickListener(v -> {
                 if (itemClickListener != null) {
                     itemClickListener.onItemClick(position);
                 }
-            });
+            });*/
+
+        // يربط الضغط على كل البطاقة-الايتم-الكارد
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+            itemClickListener.onItemClick(position);
+        }
+        });
+
 
             //  🖼️ يحمل صورة الوصفة
             if (recipe.getImageUri() == null || recipe.getImageUri().isEmpty()) {

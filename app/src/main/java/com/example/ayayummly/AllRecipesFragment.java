@@ -66,8 +66,16 @@ public class AllRecipesFragment extends Fragment {
         recipes = new ArrayList<>();
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        /*
+        اصلي
         recipes = getRecipes();
         myAdapter = new AllRecipesAdapter(getActivity(), recipes);
+        */
+        myAdapter = new AllRecipesAdapter(getActivity(), recipes);
+        recyclerView.setAdapter(myAdapter);
+        getRecipes(); // نستدعيها بدون return
+
+
         filteredList = new ArrayList<>();
 
         // فتح صفحة إضافة وصفة
@@ -115,11 +123,37 @@ public class AllRecipesFragment extends Fragment {
 
     }
 
+//كوبايلت بس زبطت الحمد لله
+    public void getRecipes() {
+
+        try {
+            fbs.getFire().collection("recipes")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+
+                            recipes.clear();
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                recipes.add(document.toObject(Recipe.class));
+                            }
+
+                            myAdapter.notifyDataSetChanged();
+
+                        } else {
+                            Toast.makeText(getActivity(), "Error loading recipes", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        catch (Exception e) {
+            Log.e("getCompaniesMap(): ", e.getMessage());
+            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
-
-
-
+//اصلي
+/*
         public ArrayList<Recipe> getRecipes()
         {
 
@@ -137,9 +171,12 @@ public class AllRecipesFragment extends Fragment {
                                     recipes.add(document.toObject(Recipe.class));
                                 }
 
+
                                 AllRecipesAdapter adapter = new AllRecipesAdapter(getActivity(), recipes);
                                 recyclerView.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
+
+
                                 //addUserToCompany(companies, user);
                             } else {
                                 //Log.e("AllRestActivity: readData()", "Error getting documents.", task.getException());
@@ -157,5 +194,8 @@ public class AllRecipesFragment extends Fragment {
             return recipes;
         }
 
+
+
+ */
 
 }
