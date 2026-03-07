@@ -68,7 +68,7 @@ public class Utils  {
                     .addOnSuccessListener(taskSnapshot ->
                             imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
 
-                                fbs.setSelectedImageURL(uri);
+                                //fbs.setSelectedImageURL(uri);
                                 callback.onUploadSuccess(uri.toString());
 
                                 Toast.makeText(context, "Image uploaded successfully", Toast.LENGTH_SHORT).show();

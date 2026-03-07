@@ -9,16 +9,14 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/bg_beige">
+        android:layout_height="300dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false"
-            app:contentScrim="@color/brown_dark"
-            android:background="@color/bg_beige">
+            app:contentScrim="@color/brown_dark">
 
             <FrameLayout
                 android:id="@+id/imageContainer"
@@ -30,31 +28,19 @@
                     android:id="@+id/ivRecipe"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:background="@color/beige_mid"
                     android:contentDescription="@string/desc_recipe_image" />
 
-                <TextView
-                    android:id="@+id/tvPlaceholder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Good food = Good mood\n(Math never lies)\nA photo is missing,\nbut the flavor isn’t."
-                    android:textColor="#6B4F3A"
-                    android:textSize="16sp"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:background="@drawable/ic_placeholder"
-                    android:padding="16dp"
-                    android:layout_gravity="center" />
-
             </FrameLayout>
+
 
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/bg_beige"
+                android:background="@android:color/transparent"
                 app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -245,35 +231,27 @@
                 app:strokeWidth="1dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="10dp"
-                    android:gravity="center_vertical">
+                    android:padding="10dp">
 
                     <RatingBar
                         android:id="@+id/ratingBar"
                         style="?android:attr/ratingBarStyleIndicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:indeterminateTint="@color/gold"
                         android:numStars="5"
-                        android:stepSize="0.5"
+                        android:progressTint="@color/gold"
                         android:rating="4.5"
                         android:scaleX="1"
                         android:scaleY="1"
-                        android:progressTint="@color/gold"
                         android:secondaryProgressTint="@color/gold"
-                        android:indeterminateTint="@color/gold"
-                        android:layout_marginEnd="8dp"/>
+                        android:stepSize="0.5" />
 
-                    <TextView
-                        android:id="@+id/tvRatingValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4.5"
-                        android:textColor="@color/text_dark"
-                        android:textSize="15sp"
-                        android:paddingStart="4dp"/>
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>

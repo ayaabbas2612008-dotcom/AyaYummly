@@ -114,15 +114,22 @@ public class AllRecipesAdapter  extends RecyclerView.Adapter<AllRecipesAdapter.M
 
 
             //  🖼️ يحمل صورة الوصفة
-            if (recipe.getImageUri() == null || recipe.getImageUri().isEmpty()) {
-                // إذا ما في صورة، يحط صورة افتراضية
-                Picasso.get().load(R.drawable.ic_launcher_foreground).into(holder.ivItemImage);
-            }
-            else {
-                // إذا في صورة، يحملها
-                Picasso.get().load(recipe.getImageUri()).into(holder.ivItemImage);
-            }
-     //انا هون مش حاطه الاشياء تعون الفافورت المفضلة وهيك
+        String img = recipe.getImageUri();
+
+     // حماية من null أو قيم فاضية
+        if (img == null || img.trim().isEmpty() || img.equals("null")) {
+            img = null; // Picasso رح يستخدم placeholder
+        }
+
+        Picasso.get()
+                .load(img)
+                .placeholder(R.drawable.placeholder_recipe1)
+                .error(R.drawable.placeholder_recipe1)
+                .fit()
+                .centerCrop()
+                .into(holder.ivItemImage);
+
+        //انا هون مش حاطه الاشياء تعون الفافورت المفضلة وهيك
 
     }
 

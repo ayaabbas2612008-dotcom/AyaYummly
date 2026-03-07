@@ -123,7 +123,7 @@ public class AllRecipesFragment extends Fragment {
 
     }
 
-//كوبايلت بس زبطت الحمد لله
+//كوبايلت بس زبطت الحمد للهاكتب
     public void getRecipes() {
 
         try {

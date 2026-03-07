@@ -44,6 +44,7 @@ public class  AddRecipeFragment extends Fragment {
     private FirebaseServices fbs;
     private Utils utils;
     private ProgressBar progressBar;
+    private String uploadedImageUrl = "";
 
 
     String[] categories = {
@@ -78,14 +79,17 @@ public class  AddRecipeFragment extends Fragment {
 
                             // تشغيل الدائرة
                             progressBar.setVisibility(View.VISIBLE);
-                            btnSave.setEnabled(false);
+                            //btnSave.setEnabled(false);
 
                             utils.uploadImage(getActivity(), imageUri, new Utils.ImageUploadCallback() {
                                 @Override
                                 public void onUploadSuccess(String url) {
                                     progressBar.setVisibility(View.GONE);
-                                    btnSave.setEnabled(true);
-                                    fbs.setSelectedImageURL(Uri.parse(url));
+                                  //  btnSave.setEnabled(true);
+                                   // fbs.setSelectedImageURL(Uri.parse(url));
+                                    uploadedImageUrl = url;   // يخزن رابط الصورة هون
+
+                                    Toast.makeText(getActivity(), "Image uploaded!", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
@@ -94,6 +98,7 @@ public class  AddRecipeFragment extends Fragment {
                                     Toast.makeText(getActivity(), "Upload failed!", Toast.LENGTH_SHORT).show();
                                 }
                             });
+
                         }
                     });
 
@@ -149,7 +154,7 @@ public class  AddRecipeFragment extends Fragment {
         imageViewAddRecipe = getView().findViewById(R.id.imageView);
         Button btnChooseImage = getView().findViewById(R.id.btnChooseImage);
         progressBar = getView().findViewById(R.id.progressBar);
-        btnSave.setEnabled(false); // زر الحفظ ممنوع يشتغل قبل رفع الصورة
+       // btnSave.setEnabled(false); // زر الحفظ ممنوع يشتغل قبل رفع الصورة
 
 
 
@@ -230,9 +235,9 @@ public class  AddRecipeFragment extends Fragment {
         String difficulty = spDifficulty.getSelectedItem().toString();
 
         float rating = ratingBar.getRating();
-
         // الحصول على رابط الصورة من FirebaseServices
-        String imageUri = fbs.getSelectedImageURL() != null ? fbs.getSelectedImageURL().toString() : "";
+       // String imageUri = fbs.getSelectedImageURL() != null ? fbs.getSelectedImageURL().toString() : "";
+        String imageUri = uploadedImageUrl != null ? uploadedImageUrl : "";
 
         int prepTime = 0;
         int cookTime = 0;
@@ -264,8 +269,7 @@ public class  AddRecipeFragment extends Fragment {
             Toast.makeText(getActivity(), "Please select a difficulty level!", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        Recipe recipe;
+       /* Recipe recipe;
         if (fbs.getSelectedImageURL() == null) {
             // === 3. Create Recipe object ===
             recipe = new Recipe(
@@ -300,6 +304,24 @@ public class  AddRecipeFragment extends Fragment {
             );
         }
 
+        */
+
+        Recipe recipe = new Recipe(
+                recipeName,
+                cookName,
+                category,
+                difficulty,
+                rating,
+                prepTime,
+                cookTime,
+                ingredients,
+                steps,
+                servings,
+                notes,
+                imageUri   // هون يا رابط يا ""
+        );
+
+
         // === 4. Upload to Firebase ===
         fbs.getFire().collection("recipes")
                 .add(recipe)
@@ -333,8 +355,10 @@ public class  AddRecipeFragment extends Fragment {
 
         imageViewAddRecipe.setImageResource(android.R.drawable.ic_menu_gallery);
 
-        // مسح الصورة المختارة
-        fbs.setSelectedImageURL(null);
+     // مسح الصورة المختارة
+     //   fbs.setSelectedImageURL(null);
+        uploadedImageUrl = "";
+
     }
 
 
