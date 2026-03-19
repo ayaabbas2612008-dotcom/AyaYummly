@@ -415,20 +415,49 @@ public class RecipeDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // هذا السطر هو الذي يربط ملف الـ XML
         return inflater.inflate(R.layout.fragment_recipe_details, container, false);
     }
 
+
+
+    /*
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
        //init();
     }
+     */
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // استلام البيانات هنا فور إنشاء الواجهة
+        if (getArguments() != null) {
+            myRecipe = getArguments().getParcelable("recipe");
+        }
+
+        init(); // تشغيل دالة الربط والعرض
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // اتركيها فارغة أو احذفي استدعاء init() منها إذا كان موجوداً
+    }
+
+
+    /*
     @Override
     public void onStart() {
         super.onStart();
         init();
     }
+
+     */
+    //في أندرويد، القاعدة الذهبية هي: "إذا كانت الدالة تعطيكِ الـ view جاهزاً (مثل onViewCreated)، فاستخدميه مباشرة ولا تبحثي عنه مرة أخرى بـ getView()".
+    //ممكن احتاج هاي المعلومة لقدام
 
     private void init() {
         fbs = FirebaseServices.getInstance();
