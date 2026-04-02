@@ -18,5 +18,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="All"/>
+    <Button
+        android:id="@+id/btnAdminProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:layout_marginTop="20dp"/>
+    <Button
+        android:id="@+id/btnlogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/btnSignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Signup"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/btnForgot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="forgot password"
+        android:layout_marginTop="20dp"/>
+
 
 </LinearLayout>

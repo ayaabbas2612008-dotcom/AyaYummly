@@ -19,6 +19,11 @@ public class Recipe implements Parcelable {
     private String ingredients;
     private String steps;
     private String servings;
+    private String id; // هذا لتخزين ID الوصفة من فايربيز، هوية الوصفة
+
+    private String ownerId;// رقم صاحب الوصفة (UID)، هوية صاحب الوصفة
+
+    private boolean isFav; //للمفضلة
 
 
     public Recipe() {
@@ -27,8 +32,8 @@ public class Recipe implements Parcelable {
     // Constructor
 
     public Recipe(String recipeName, String cookName, String category, String difficulty,
-                  float rating, int prepTime, int cookTime, String ingredients, String steps, String servings,
-                  String notes, String imageUri) {
+                  float rating, int prepTime, int cookTime, String ingredients, String steps,
+                  String servings, String notes, String imageUri, String id, String ownerId) {
 
         this.recipeName = recipeName;
         this.cookName = cookName;
@@ -42,7 +47,10 @@ public class Recipe implements Parcelable {
         this.servings = servings;
         this.notes = notes;
         this.imageUri = imageUri;
+        this.id = id;
+        this.ownerId = ownerId;
     }
+
 
 
     // Constructor from Parcel
@@ -59,6 +67,9 @@ public class Recipe implements Parcelable {
         servings = in.readString();
         notes = in.readString();
         imageUri = in.readString();
+        id = in.readString();
+        ownerId = in.readString();
+        isFav = in.readByte() != 0;
 
 
     }
@@ -90,6 +101,9 @@ public class Recipe implements Parcelable {
     public String getServings() { return servings; }    public String getNotes() { return notes; }
     public String getImageUri() { return imageUri; }
 
+    public String getId() { return id; }
+    public String getOwnerId() { return ownerId; }
+    public boolean isFav() { return isFav; }
 
     // Setters
     public void setRecipeName(String recipeName) { this.recipeName = recipeName; }
@@ -105,24 +119,30 @@ public class Recipe implements Parcelable {
     public void setServings(String servings) {this.servings = servings;}
     public void setNotes(String notes) { this.notes = notes; }
     public void setImageUri(String imageUri) { this.imageUri = imageUri; }
+    public void setId(String id) { this.id = id; }
+    public void setOwnerId(String ownerId) { this.ownerId = ownerId; }
+    public void setFav(boolean fav) { isFav = fav; }
 
 
 
     @Override
     public String toString() {
         return "Recipe{" +
-                "recipeName='" + recipeName + '\'' +
+                "id='" + id + '\'' + // أضفنا الـ ID هنا في البداية
+                ", recipeName='" + recipeName + '\'' +
                 ", cookName='" + cookName + '\'' +
                 ", category='" + category + '\'' +
                 ", difficulty='" + difficulty + '\'' +
                 ", rating=" + rating +
                 ", prepTime=" + prepTime +
                 ", cookTime=" + cookTime +
-        ", ingredients='" + ingredients + '\'' +
+                ", ingredients='" + ingredients + '\'' +
                 ", steps='" + steps + '\'' +
                 ", servings='" + servings + '\''+
                 ", notes='" + notes + '\'' +
                 ", imageUri='" + imageUri + '\''  +
+                ", ownerId='" + ownerId + '\'' +
+
                 '}';
     }
 
@@ -147,6 +167,9 @@ public class Recipe implements Parcelable {
         dest.writeString(servings);
         dest.writeString(notes);
         dest.writeString(imageUri);
+        dest.writeString(id);
+        dest.writeString(ownerId);
+        dest.writeByte((byte) (isFav ? 1 : 0));
 
     }
 

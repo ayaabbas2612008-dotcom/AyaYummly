@@ -375,6 +375,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -409,6 +410,7 @@ public class RecipeDetailsFragment extends Fragment {
     private long timeLeftMillis;
     private boolean isTimerRunning = false;
     private boolean isPaused = false;
+    private ImageView btnEditRecipe, btnDeleteRecipe;
 
     public RecipeDetailsFragment() {}
 
@@ -438,7 +440,7 @@ public class RecipeDetailsFragment extends Fragment {
             myRecipe = getArguments().getParcelable("recipe");
         }
 
-        init(); // تشغيل دالة الربط والعرض
+        init(view); // تشغيل دالة الربط والعرض
     }
 
     @Override
@@ -458,38 +460,77 @@ public class RecipeDetailsFragment extends Fragment {
      */
     //في أندرويد، القاعدة الذهبية هي: "إذا كانت الدالة تعطيكِ الـ view جاهزاً (مثل onViewCreated)، فاستخدميه مباشرة ولا تبحثي عنه مرة أخرى بـ getView()".
     //ممكن احتاج هاي المعلومة لقدام
-
-    private void init() {
+//هه احتجتها زبطها
+    private void init(View view) {
         fbs = FirebaseServices.getInstance();
 
         if (getArguments() != null) {
             myRecipe = getArguments().getParcelable("recipe");
         }
 
-        tvTitle = getView().findViewById(R.id.tvTitle);
-        tvChefName = getView().findViewById(R.id.tvChefName);
-        tvCategory = getView().findViewById(R.id.tvCategory);
+        tvTitle = view.findViewById(R.id.tvTitle);
+        tvChefName = view.findViewById(R.id.tvChefName);
+        tvCategory = view.findViewById(R.id.tvCategory);
 
-        tvPrepTime = getView().findViewById(R.id.tvPrepTime);
-        tvCookTime = getView().findViewById(R.id.tvCookTime);
-        tvTotalTime = getView().findViewById(R.id.tvTotalTime);
+        tvPrepTime = view.findViewById(R.id.tvPrepTime);
+        tvCookTime = view.findViewById(R.id.tvCookTime);
+        tvTotalTime = view.findViewById(R.id.tvTotalTime);
 
-        tvLevel = getView().findViewById(R.id.tvLevel);
-        tvCookingTip = getView().findViewById(R.id.tvCookingTip);
-        tvServings = getView().findViewById(R.id.tvServings);
+        tvLevel = view.findViewById(R.id.tvLevel);
+        tvCookingTip = view.findViewById(R.id.tvCookingTip);
+        tvServings = view.findViewById(R.id.tvServings);
 
-        tvIngredients = getView().findViewById(R.id.tvIngredients);
-        tvSteps = getView().findViewById(R.id.tvSteps);
-        tvNotes = getView().findViewById(R.id.tvNotes);
+        tvIngredients = view.findViewById(R.id.tvIngredients);
+        tvSteps = view.findViewById(R.id.tvSteps);
+        tvNotes = view.findViewById(R.id.tvNotes);
 
-        ivRecipePhoto = getView().findViewById(R.id.ivRecipe);
+        ivRecipePhoto = view.findViewById(R.id.ivRecipe);
 
-        ratingBar = getView().findViewById(R.id.ratingBar);
-        btnFav = getView().findViewById(R.id.btnFav);
-        btnShare = getView().findViewById(R.id.btnShare);
-        btnStartCooking = getView().findViewById(R.id.btnStartCooking);
-        btnStopCooking = getView().findViewById(R.id.btnStopCooking);
+        ratingBar = view.findViewById(R.id.ratingBar);
+        btnFav = view.findViewById(R.id.btnFav);
+        btnShare = view.findViewById(R.id.btnShare);
+        btnStartCooking = view.findViewById(R.id.btnStartCooking);
+        btnStopCooking = view.findViewById(R.id.btnStopCooking);
 
+
+        btnEditRecipe = view.findViewById(R.id.btnEditRecipe);
+        btnDeleteRecipe = view.findViewById(R.id.btnDeleteRecipe);
+
+// ⭐ إظهار أو إخفاء أزرار التعديل والحذف حسب صاحب الوصفة
+        if (fbs.getAuth().getCurrentUser() != null) {
+            String currentUserId = fbs.getAuth().getCurrentUser().getUid();
+
+            if (myRecipe.getOwnerId() != null && myRecipe.getOwnerId().equals(currentUserId)) {
+                btnEditRecipe.setVisibility(View.VISIBLE);
+                btnDeleteRecipe.setVisibility(View.VISIBLE);
+            } else {
+                btnEditRecipe.setVisibility(View.GONE);
+                btnDeleteRecipe.setVisibility(View.GONE);
+            }
+        } else {
+            btnEditRecipe.setVisibility(View.GONE);
+            btnDeleteRecipe.setVisibility(View.GONE);
+        }
+
+
+
+        // btnEditRecipe = getView().findViewById(R.id.btnEditRecipe);
+        btnEditRecipe.setOnClickListener(v -> {
+            // 1. إنشاء نسخة من فرجمنت الإضافة (AddRecipeFragment)
+            AddRecipeFragment addFragment = new AddRecipeFragment();
+
+            // 2. تمرير بيانات الوصفة الحالية لها
+            Bundle args = new Bundle();
+            args.putParcelable("recipe", myRecipe);
+            addFragment.setArguments(args);
+
+            // 3. الانتقال للشاشة
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frameLayout, addFragment) // تأكدي أن R.id.frameLayout هو الـ Container في MainActivity
+                    .addToBackStack(null)
+                    .commit();
+        });
+        btnDeleteRecipe =view.findViewById(R.id.btnDeleteRecipe);
         if (myRecipe != null) {
 
             tvTitle.setText(myRecipe.getRecipeName());
@@ -535,6 +576,9 @@ public class RecipeDetailsFragment extends Fragment {
             setupCookingTimer(totalTime);
         }
 
+
+
+
         ivRecipePhoto.setOnClickListener(v -> {
             if (isEnlarged) {
                 ivRecipePhoto.animate().scaleX(1f).scaleY(1f).setDuration(300).start();
@@ -543,7 +587,7 @@ public class RecipeDetailsFragment extends Fragment {
             }
             isEnlarged = !isEnlarged;
         });
-
+/*
         btnFav.setOnClickListener(v -> {
             btnFav.animate()
                     .scaleX(1.3f).scaleY(1.3f)
@@ -560,6 +604,50 @@ public class RecipeDetailsFragment extends Fragment {
             isFav = !isFav;
         });
 
+ */
+        if (myRecipe.isFav()) {
+            btnFav.setImageResource(R.drawable.ic_favorite);
+            isFav = true;
+        } else {
+            btnFav.setImageResource(R.drawable.ic_favorite_border);
+            isFav = false;
+        }
+
+        btnFav.setOnClickListener(v -> {
+
+            // Animation
+            btnFav.animate()
+                    .scaleX(1.3f).scaleY(1.3f)
+                    .setDuration(150)
+                    .withEndAction(() ->
+                            btnFav.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
+                    ).start();
+
+            // Toggle
+            isFav = !isFav;
+            myRecipe.setFav(isFav);
+
+            // Change icon
+            if (isFav) {
+                btnFav.setImageResource(R.drawable.ic_favorite);
+            } else {
+                btnFav.setImageResource(R.drawable.ic_favorite_border);
+            }
+
+            // Update Firestore
+            fbs.getFire().collection("recipes")
+                    .document(myRecipe.getId())
+                    .update("fav", isFav)
+                    .addOnSuccessListener(a -> {
+                        Toast.makeText(getContext(),
+                                isFav ? "Added to favorites ❤️" : "Removed from favorites 🤍",
+                                Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        });
+
         btnShare.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
@@ -571,6 +659,32 @@ public class RecipeDetailsFragment extends Fragment {
             intent.putExtra(Intent.EXTRA_TEXT, text);
             startActivity(Intent.createChooser(intent, "Share recipe via"));
         });
+
+/*
+        btnDeleteRecipe.setOnClickListener(v -> {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("حذف الوصفة")
+                    .setMessage("هل أنتِ متأكدة من حذف هذه الوصفة؟")
+                    .setPositiveButton("حذف", (dialog, which) -> {
+                        // كود الحذف من قاعدة البيانات (Room أو Firebase)
+                        deleteRecipe();
+                    })
+                    .setNegativeButton("إلغاء", null)
+                    .show();
+        });
+
+ */
+        btnDeleteRecipe.setOnClickListener(v -> {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Delete Recipe")
+                    .setMessage("Are you sure you want to delete this recipe?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        deleteRecipe();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
+
     }
 
     private void setupCookingTimer(int totalMinutes) {
@@ -641,5 +755,34 @@ public class RecipeDetailsFragment extends Fragment {
                 btnStartCooking.setText("Start Cooking");
             }
         }.start();
+    }
+    private void deleteRecipe() {
+        // 1. التأكد أن الوصفة موجودة ولها ID
+        if (myRecipe != null && myRecipe.getId() != null) {
+
+            // 2. الوصول لمجموعة الوصفات في فايربيس وحذف الوثيقة باستخدام الـ ID
+            fbs.getFire().collection("recipes")
+                    .document(myRecipe.getId())
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        // إذا نجح الحذف
+                       // Toast.makeText(getContext(), "تم حذف الوصفة بنجاح ✅", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Recipe deleted successfully ✅", Toast.LENGTH_SHORT).show();
+
+                        // العودة للشاشة السابقة (قائمة الوصفات)
+                        if (getActivity() != null) {
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // إذا فشل الحذف
+                        Toast.makeText(getContext(), "Delete failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        // Toast.makeText(getContext(), "فشل الحذف: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(getContext(), "Error: Recipe ID not found", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getContext(), "خطأ: لا يمكن العثور على ID الوصفة", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -4,58 +4,25 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+/*
 public class AdminFragment extends Fragment {
 
-    private  Button btnAdd, btnAll;
+    private  Button btnAdd, btnAll, btnProfile;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AdminFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AdminFragment newInstance(String param1, String param2) {
-        AdminFragment fragment = new AdminFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public AdminFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -80,6 +47,19 @@ public class AdminFragment extends Fragment {
             @Override
             public void onClick(View v) {gotoAllRecipeFragment();}
         });
+        btnProfile = getView().findViewById(R.id.btnAdminProfile);
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoProfileFragment();
+            }
+        });
+
+    }
+    private void gotoProfileFragment() {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frameLayoutMain, new ProfileFragment());
+        ft.commit();
     }
 
     private void gotoAddRecipeFragment() {
@@ -93,5 +73,82 @@ public class AdminFragment extends Fragment {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frameLayoutMain, new AllRecipesFragment());
         ft.commit();
+    }
+}
+
+ */
+public class AdminFragment extends Fragment {
+
+    private Button btnAdd, btnAll, btnProfile, btnLogin, btnSignup, btnForgot;
+
+    public AdminFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_admin, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Connect buttons
+        btnAdd = view.findViewById(R.id.btnAdd);
+        btnAll = view.findViewById(R.id.btnAll);
+        btnProfile = view.findViewById(R.id.btnAdminProfile);
+        btnLogin = view.findViewById(R.id.btnlogin);
+        btnSignup = view.findViewById(R.id.btnSignup);
+        btnForgot = view.findViewById(R.id.btnForgot);
+
+        // Add Recipe
+        btnAdd.setOnClickListener(v -> {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayoutMain, new AddRecipeFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        });
+
+        // All Recipes
+        btnAll.setOnClickListener(v -> {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayoutMain, new AllRecipesFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        });
+
+        // Profile
+        btnProfile.setOnClickListener(v -> {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayoutMain, new ProfileFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        });
+
+        // Login
+        btnLogin.setOnClickListener(v -> {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayoutMain, new LoginFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        });
+
+        // Signup
+        btnSignup.setOnClickListener(v -> {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayoutMain, new SignupFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        });
+
+        // Forgot Password
+        btnForgot.setOnClickListener(v -> {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayoutMain, new ForgotPasswordFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        });
     }
 }

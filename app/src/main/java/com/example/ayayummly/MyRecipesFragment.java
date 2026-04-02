@@ -2,7 +2,6 @@ package com.example.ayayummly;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,14 +17,17 @@ import android.widget.Toast;
 import com.example.ayayummly.classes.AllRecipesAdapter;
 import com.example.ayayummly.classes.FirebaseServices;
 import com.example.ayayummly.classes.Recipe;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class AllRecipesFragment extends Fragment {
+public class MyRecipesFragment extends Fragment {
+
+
+    public MyRecipesFragment() {
+        // Required empty public constructor
+    }
+
 
     private RecyclerView recyclerView;
     private FirebaseServices fbs;
@@ -34,9 +36,6 @@ public class AllRecipesFragment extends Fragment {
 
 
 
-    public AllRecipesFragment() {
-        // Required empty public constructor
-    }
 
 
     @Override
@@ -44,12 +43,6 @@ public class AllRecipesFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_all_recipes, container, false);
-    }
 
     public void onStart() {
         super.onStart();
@@ -123,56 +116,14 @@ public class AllRecipesFragment extends Fragment {
 
     }
 
-//كوبايلت بس زبطت الحمد لله 2
-public void getRecipes() {
-
-    try {
-        fbs.getFire().collection("recipes")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-
-                        recipes.clear();
-
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-
-                            Recipe r = document.toObject(Recipe.class);
-
-                            // ⭐ إذا الوصفة ما فيها id → ضيفه تلقائيًا
-                            if (document.get("id") == null) {
-                                fbs.getFire().collection("recipes")
-                                        .document(document.getId())
-                                        .update("id", document.getId());
-                            }
-
-                            // ⭐ إذا الوصفة ما فيها fav → ضيفه تلقائيًا
-                            if (document.get("fav") == null) {
-                                fbs.getFire().collection("recipes")
-                                        .document(document.getId())
-                                        .update("fav", false);
-                            }
-
-                            recipes.add(r);
-                        }
-
-                        myAdapter.notifyDataSetChanged();
-
-                    } else {
-                        Toast.makeText(getActivity(), "Error loading recipes", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-    catch (Exception e) {
-        Log.e("getRecipes(): ", e.getMessage());
-        Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-}
-
-    /*
+    //كوبايلت بس زبطت الحمد للهاكتب
     public void getRecipes() {
 
         try {
+            String currentUserId = fbs.getAuth().getCurrentUser().getUid();
+
             fbs.getFire().collection("recipes")
+                    .whereEqualTo("ownerId", currentUserId)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -191,59 +142,16 @@ public void getRecipes() {
                     });
         }
         catch (Exception e) {
-            Log.e("getCompaniesMap(): ", e.getMessage());
+            Log.e("getRecipes(): ", e.getMessage());
             Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
     }
 
-
-     */
-
-//اصلي
-/*
-        public ArrayList<Recipe> getRecipes()
-        {
-
-            ArrayList<Recipe> recipes = new ArrayList<>();
-
-            try {
-            recipes.clear();
-            fbs.getFire().collection("recipes")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    recipes.add(document.toObject(Recipe.class));
-                                }
-
-
-                                AllRecipesAdapter adapter = new AllRecipesAdapter(getActivity(), recipes);
-                                recyclerView.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-
-
-                                //addUserToCompany(companies, user);
-                            } else {
-                                //Log.e("AllRestActivity: readData()", "Error getting documents.", task.getException());
-                                Toast.makeText(getActivity(), "Error loading recipes", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-            }
-            catch (Exception e)
-            {
-            Log.e("getCompaniesMap(): ", e.getMessage());
-            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
-            return recipes;
-        }
-
-
-
- */
-
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_my_recipes, container, false);
+    }
 }
+

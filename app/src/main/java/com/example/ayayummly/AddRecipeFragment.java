@@ -305,7 +305,7 @@ public class  AddRecipeFragment extends Fragment {
         }
 
         */
-
+/*
         Recipe recipe = new Recipe(
                 recipeName,
                 cookName,
@@ -318,8 +318,33 @@ public class  AddRecipeFragment extends Fragment {
                 steps,
                 servings,
                 notes,
-                imageUri   // هون يا رابط يا ""
+                imageUri,   // هون يا رابط يا ""
+                null
         );
+
+
+
+ */
+        Recipe recipe = new Recipe(
+                recipeName,
+                cookName,
+                category,
+                difficulty,
+                rating,
+                prepTime,
+                cookTime,
+                ingredients,
+                steps,
+                servings,
+                notes,
+                imageUri,
+                null,      // id
+                null       // ownerId
+        );
+
+
+// ⭐ إضافة صاحب الوصفة
+        recipe.setOwnerId(fbs.getAuth().getCurrentUser().getUid());
 
 
         // === 4. Upload to Firebase ===
@@ -328,6 +353,10 @@ public class  AddRecipeFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+                        // 👇 هاد السطر هو "المفتاح" اللي بخلينا نقدر نعدل الوصفة مستقبلاً
+                        String docId = documentReference.getId();
+                        documentReference.update("id", docId);
+
                         Toast.makeText(getActivity(), "Recipe added successfully!", Toast.LENGTH_SHORT).show();
                         clearForm();
                     }

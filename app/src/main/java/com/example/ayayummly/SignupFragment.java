@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.example.ayayummly.classes.User;
+
 
 import com.example.ayayummly.classes.FirebaseServices;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -94,7 +96,7 @@ public class SignupFragment extends Fragment {
                     Toast.makeText(getActivity(), "Some fields are empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
-
+/*
                 // Signup procedure
                 fbs.getAuth().createUserWithEmailAndPassword(username, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
@@ -110,6 +112,39 @@ public class SignupFragment extends Fragment {
                     }
                 });
 
+
+
+ */
+                // Signup procedure
+                fbs.getAuth().createUserWithEmailAndPassword(username, password)
+                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+
+                                // 1) جلب UID
+                                String uid = authResult.getUser().getUid();
+
+                                // 2) إنشاء كائن User
+                                User user = new User(uid, username, username, "user");
+
+                                // 3) تخزين اليوزر في Firestore
+                                fbs.getFire().collection("users")
+                                        .document(uid)
+                                        .set(user)
+                                        .addOnSuccessListener(a -> {
+                                            Toast.makeText(getActivity(), "Signup successful!", Toast.LENGTH_LONG).show();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(getActivity(), "User saved but Firestore failed!", Toast.LENGTH_LONG).show();
+                                        });
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getActivity(), "Failed to signup! Check user or password!", Toast.LENGTH_LONG).show();
+                            }
+                        });
 
 
             }

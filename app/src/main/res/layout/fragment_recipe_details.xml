@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@color/bg_beige">
+        android:background="@android:color/transparent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false"
             app:contentScrim="@color/brown_dark"
-            android:background="@color/bg_beige">
+            android:background="@android:color/transparent">
 
             <FrameLayout
                 android:id="@+id/imageContainer"
@@ -34,17 +34,43 @@
                     android:scaleType="centerCrop"
                     android:background="@color/beige_card"
                     android:contentDescription="@string/desc_recipe_image" />
-
             </FrameLayout>
-
-
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/bg_beige"
-                app:layout_collapseMode="pin" />
+                android:background="@android:color/transparent"
+                app:layout_collapseMode="pin">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:orientation="horizontal"
+                    android:paddingEnd="16dp">
+
+                    <ImageView
+                        android:id="@+id/btnEditRecipe"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:src="@android:drawable/ic_menu_edit"
+                        app:tint="@android:color/white"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+
+                    <ImageView
+                        android:id="@+id/btnDeleteRecipe"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="12dp"
+                        android:padding="8dp"
+                        android:src="@android:drawable/ic_menu_delete"
+                        app:tint="@android:color/white"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+                </LinearLayout>
+
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -72,7 +98,6 @@
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:fontFamily="serif"
-                android:background="@color/bg_beige"
                 android:layout_marginBottom="10dp" />
 
             <LinearLayout
@@ -80,7 +105,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@color/bg_beige"
                 android:layout_marginBottom="20dp">
 
                 <TextView
@@ -90,8 +114,7 @@
                     android:text="@string/chef_name"
                     android:textColor="@color/brown_dark"
                     android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:background="@color/bg_beige" />
+                    android:textSize="15sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -105,8 +128,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/category_main_dish"
                     android:textColor="@color/text_mid"
-                    android:textSize="15sp"
-                    android:background="@color/bg_beige" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
@@ -121,15 +143,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="18dp"
-                    android:background="@color/beige_card">
+                    android:padding="18dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="3"
-                        android:background="@color/beige_card">
+                        android:weightSum="3">
 
                         <TextView
                             android:id="@+id/tvPrepTime"
@@ -138,8 +158,7 @@
                             android:layout_weight="1"
                             android:text="@string/prep_time"
                             android:textColor="@color/text_dark"
-                            android:textSize="14sp"
-                            android:background="@color/beige_card"/>
+                            android:textSize="14sp"/>
 
                         <TextView
                             android:id="@+id/tvCookTime"
@@ -149,9 +168,7 @@
                             android:text="@string/cook_time"
                             android:textColor="@color/text_dark"
                             android:textSize="14sp"
-                            android:gravity="center"
-                            android:background="@color/beige_card"/>
-
+                            android:gravity="center"/>
 
                         <TextView
                             android:id="@+id/tvTotalTime"
@@ -162,8 +179,7 @@
                             android:textColor="@color/brown_dark"
                             android:textStyle="bold"
                             android:textSize="14sp"
-                            android:gravity="end"
-                            android:background="@color/beige_card"/>
+                            android:gravity="end"/>
                     </LinearLayout>
 
                     <View
@@ -171,15 +187,14 @@
                         android:layout_height="1dp"
                         android:background="@color/beige_line"
                         android:layout_marginVertical="12dp"/>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="3"
-                        android:background="@color/beige_card"
                         android:layout_marginBottom="8dp">
 
-                        <!-- LEVEL -->
                         <TextView
                             android:id="@+id/tvLevel"
                             android:layout_width="0dp"
@@ -188,10 +203,8 @@
                             android:text="@string/level_easy"
                             android:textColor="@color/text_dark"
                             android:textSize="14sp"
-                            android:background="@color/beige_card"
                             android:padding="4dp" />
 
-                        <!-- COOKING TIP -->
                         <TextView
                             android:id="@+id/tvCookingTip"
                             android:layout_width="0dp"
@@ -200,12 +213,10 @@
                             android:text="@string/cooking_tip"
                             android:textColor="@color/text_mid"
                             android:textSize="13sp"
-                            android:background="@color/beige_card"
                             android:padding="4dp"
                             android:gravity="center"
                             android:lineSpacingExtra="2dp" />
 
-                        <!-- SERVINGS -->
                         <TextView
                             android:id="@+id/tvServings"
                             android:layout_width="0dp"
@@ -214,14 +225,12 @@
                             android:text="@string/serves_two"
                             android:textColor="@color/text_dark"
                             android:textSize="14sp"
-                            android:background="@color/beige_card"
                             android:padding="4dp"
                             android:gravity="end" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-            <!-- RATING CARD -->
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -250,26 +259,19 @@
                         android:numStars="5"
                         android:progressTint="@color/gold"
                         android:rating="4.5"
-                        android:scaleX="1"
-                        android:scaleY="1"
                         android:secondaryProgressTint="@color/gold"
                         android:stepSize="0.5" />
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
-
 
             <TextView
                 android:text="@string/ingredients_title"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/brown_dark"
-                android:background="@color/bg_beige"
                 android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tvIngredients"
@@ -278,7 +280,6 @@
                 android:text="@string/ingredients_list"
                 android:textColor="@color/text_dark"
                 android:lineSpacingExtra="6dp"
-                android:background="@color/bg_beige"
                 android:layout_marginBottom="26dp"/>
 
             <TextView
@@ -286,11 +287,9 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/brown_dark"
-                android:background="@color/bg_beige"
                 android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tvSteps"
@@ -299,7 +298,6 @@
                 android:text="@string/steps_list"
                 android:textColor="@color/text_dark"
                 android:lineSpacingExtra="6dp"
-                android:background="@color/bg_beige"
                 android:layout_marginBottom="26dp"/>
 
             <TextView
@@ -307,11 +305,9 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/brown_dark"
-                android:background="@color/bg_beige"
                 android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tvNotes"
@@ -319,8 +315,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/notes_text"
                 android:textColor="@color/text_mid"
-                android:fontStyle="italic"
-                android:background="@color/bg_beige"
                 android:layout_marginBottom="26dp"/>
 
             <LinearLayout
@@ -333,7 +327,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnStartCooking"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="67dp"
                     android:layout_weight="1"
                     android:text="@string/start_cooking"
                     android:textSize="18sp"
@@ -346,7 +340,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnStopCooking"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="67dp"
                     android:layout_weight="1"
                     android:text="Stop"
                     android:textSize="18sp"
@@ -355,9 +349,7 @@
                     android:textColor="@color/white"
                     app:cornerRadius="16dp"
                     android:layout_marginStart="10dp"/>
-
             </LinearLayout>
-
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -385,3 +377,4 @@
         android:contentDescription="@string/desc_share" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
