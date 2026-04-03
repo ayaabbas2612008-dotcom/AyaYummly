@@ -371,6 +371,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -380,11 +381,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.example.ayayummly.classes.FirebaseServices;
 import com.example.ayayummly.classes.Recipe;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
+
 
 public class RecipeDetailsFragment extends Fragment {
 
@@ -411,6 +415,9 @@ public class RecipeDetailsFragment extends Fragment {
     private boolean isTimerRunning = false;
     private boolean isPaused = false;
     private ImageView btnEditRecipe, btnDeleteRecipe;
+
+
+    private View tvViewComments;
 
     public RecipeDetailsFragment() {}
 
@@ -495,6 +502,24 @@ public class RecipeDetailsFragment extends Fragment {
 
         btnEditRecipe = view.findViewById(R.id.btnEditRecipe);
         btnDeleteRecipe = view.findViewById(R.id.btnDeleteRecipe);
+
+        tvViewComments = view.findViewById(R.id.tvViewComments);
+        tvViewComments.setOnClickListener(v -> {
+            // 1. إنشاء نسخة من فرجمنت التعليقات الجديد
+            CommentsFragment commentsFragment = new CommentsFragment();
+
+            // 2. تمرير ID الوصفة عشان الصفحة الجديدة تعرف أي تعليقات تجيب
+            Bundle args = new Bundle();
+            args.putString("recipeId", myRecipe.getId());
+            commentsFragment.setArguments(args);
+
+            // 3. الانتقال للشاشة الجديدة
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frameLayout, commentsFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
 
 // ⭐ إظهار أو إخفاء أزرار التعديل والحذف حسب صاحب الوصفة
         if (fbs.getAuth().getCurrentUser() != null) {
@@ -605,6 +630,7 @@ public class RecipeDetailsFragment extends Fragment {
         });
 
  */
+        /*
         if (myRecipe.isFav()) {
             btnFav.setImageResource(R.drawable.ic_favorite);
             isFav = true;
@@ -612,6 +638,8 @@ public class RecipeDetailsFragment extends Fragment {
             btnFav.setImageResource(R.drawable.ic_favorite_border);
             isFav = false;
         }
+
+
 
         btnFav.setOnClickListener(v -> {
 
@@ -647,6 +675,51 @@ public class RecipeDetailsFragment extends Fragment {
                         Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         });
+      */
+
+// 1. فحص الحالة عند الدخول للصفحة: هل الـ ID تبعي موجود في المصفوفة؟
+        String myId = fbs.getAuth().getUid();
+        if (myId != null && myRecipe.getFavUsers() != null) {
+            isFav = myRecipe.getFavUsers().contains(myId);
+            btnFav.setImageResource(isFav ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+        }
+
+        btnFav.setOnClickListener(v -> {
+            // الأنميشن (النبض)
+            btnFav.animate()
+                    .scaleX(1.3f).scaleY(1.3f)
+                    .setDuration(150)
+                    .withEndAction(() ->
+                            btnFav.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
+                    ).start();
+
+            // 2. تحديث المصفوفة محلياً (Toggle)
+            ArrayList<String> favorites = myRecipe.getFavUsers();
+            if (favorites.contains(myId)) {
+                favorites.remove(myId);
+                isFav = false;
+            } else {
+                favorites.add(myId);
+                isFav = true;
+            }
+
+            // 3. تغيير شكل الأيقونة فوراً
+            btnFav.setImageResource(isFav ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+
+            // 4. تحديث المصفوفة في الفايربيس (الحقل الجديد favUsers)
+            fbs.getFire().collection("recipes")
+                    .document(myRecipe.getId())
+                    .update("favUsers", favorites) // نحدث المصفوفة وليس الـ boolean
+                    .addOnSuccessListener(a -> {
+                        Toast.makeText(getContext(),
+                                isFav ? "Added to favorites ❤️" : "Removed from favorites 🤍",
+                                Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        });
+
 
         btnShare.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -785,4 +858,5 @@ public class RecipeDetailsFragment extends Fragment {
             // Toast.makeText(getContext(), "خطأ: لا يمكن العثور على ID الوصفة", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

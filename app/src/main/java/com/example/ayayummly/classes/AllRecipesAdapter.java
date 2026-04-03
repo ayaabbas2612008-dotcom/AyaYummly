@@ -179,6 +179,9 @@ public class AllRecipesAdapter  extends RecyclerView.Adapter<AllRecipesAdapter.M
         this.itemClickListener = listener;
     }
 
-
+    public void filterList(ArrayList<Recipe> filteredList) {
+        this.AllRecipes = filteredList;
+        notifyDataSetChanged();
+    }
 
 }

@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.ayayummly.classes.AllRecipesAdapter;
@@ -32,7 +34,8 @@ public class AllRecipesFragment extends Fragment {
     private AllRecipesAdapter myAdapter;
     private ArrayList<Recipe> recipes, filteredList;
 
-
+    private EditText etSearch;
+    private ImageButton btnCategoryFilter;
 
     public AllRecipesFragment() {
         // Required empty public constructor
@@ -66,6 +69,9 @@ public class AllRecipesFragment extends Fragment {
         recipes = new ArrayList<>();
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView = getView().findViewById(R.id.rvRecipeList);
+        etSearch = getView().findViewById(R.id.etSearch); // ربط خانة البحث
+        btnCategoryFilter = getView().findViewById(R.id.btnCategoryFilter); // ربط أيقونة الكتاب
         /*
         اصلي
         recipes = getRecipes();
@@ -77,6 +83,27 @@ public class AllRecipesFragment extends Fragment {
 
 
         filteredList = new ArrayList<>();
+
+        // --- كود البحث ---
+        etSearch.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterRecipes(s.toString()); // استدعاء ميثود الفلترة
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
+        });
+
+        // --- كود أيقونة التصنيفات (Category) ---
+        btnCategoryFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCategoryPopup(v); // ميثود لإظهار قائمة التصنيفات
+            }
+        });
+
 
         // فتح صفحة إضافة وصفة
         btnAddRecipe.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +148,50 @@ public class AllRecipesFragment extends Fragment {
 
 
 
+    }
+
+    private void showCategoryPopup(View v) {
+        androidx.appcompat.widget.PopupMenu popup = new androidx.appcompat.widget.PopupMenu(getActivity(), v);
+        // سحب التصنيفات من strings.xml
+        String[] categories = getResources().getStringArray(R.array.categories_array);
+
+        popup.getMenu().add("All");
+        for (String category : categories) {
+            if (!category.equals("Select Category")) {
+                popup.getMenu().add(category);
+            }
+        }
+
+        popup.setOnMenuItemClickListener(item -> {
+            if (item.getTitle().equals("All")) {
+                myAdapter.filterList(recipes);
+            } else {
+                filterByCategory(item.getTitle().toString());
+            }
+            return true;
+        });
+        popup.show();
+    }
+    private void filterByCategory(String category) {
+        ArrayList<Recipe> filtered = new ArrayList<>();
+        for (Recipe item : recipes) {
+            // تأكدي أن موديل الـ Recipe يحتوي على ميثود getCategory()
+            if (item.getCategory() != null && item.getCategory().equals(category)) {
+                filtered.add(item);
+            }
+        }
+        myAdapter.filterList(filtered);
+    }
+
+    private void filterRecipes(String text) {
+        ArrayList<Recipe> filtered = new ArrayList<>();
+        for (Recipe item : recipes) {
+            if (item.getRecipeName().toLowerCase().contains(text.toLowerCase())) {
+                filtered.add(item);
+            }
+        }
+        // يجب أن يكون لديك ميثود في الـ Adapter لتحديث البيانات
+        myAdapter.filterList(filtered);
     }
 
 //كوبايلت بس زبطت الحمد لله 2
