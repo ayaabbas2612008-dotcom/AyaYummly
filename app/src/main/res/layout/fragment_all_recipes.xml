@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".AllRecipesFragment">
 
     <LinearLayout
@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:background="@color/bg_beige">
 
-        <!-- عنوان الصفحة -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,30 +22,53 @@
             android:padding="16dp"
             android:textColor="@color/brown_dark" />
 
-        <!-- Spinner الفلترة -->
-        <Spinner
-            android:id="@+id/spFilterCategory"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_margin="12dp"
-            android:background="@drawable/spinner_background"
-            android:padding="12dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical">
 
-        <!-- قائمة الوصفات -->
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_weight="1"
+                android:hint="Search recipes..."
+                android:background="@drawable/spinner_background"
+                android:padding="12dp"
+                android:textColor="@color/brown_dark"
+                android:textColorHint="#8A8A8A"
+                android:inputType="text"
+                android:importantForAutofill="no" />
+
+            <ImageButton
+                android:id="@+id/btnCategoryFilter"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/finalcategory"
+                android:scaleType="fitCenter"
+                android:padding="10dp"
+                android:contentDescription="Filter by category" />
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRecipeList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:padding="8dp"
+            android:layout_marginTop="8dp"
             android:background="@color/bg_beige" />
 
-        <!-- زر إضافة وصفة -->
         <Button
             android:id="@+id/btnAddRecipe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
+            android:layout_gravity="end"
             android:layout_margin="16dp"
             android:text="Add Recipe"
             android:backgroundTint="@color/green_dark"
