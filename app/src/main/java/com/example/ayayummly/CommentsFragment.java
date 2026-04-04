@@ -1,4 +1,4 @@
-package com.example.ayayummly;
+/*package com.example.ayayummly;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -124,5 +124,142 @@ public class CommentsFragment extends Fragment {
                         }
                     }
                 });
+    }
+}
+
+
+ */
+
+package com.example.ayayummly;
+
+import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.ayayummly.classes.Comment;
+import com.example.ayayummly.classes.CommentAdapter;
+import com.example.ayayummly.classes.FirebaseServices;
+import com.example.ayayummly.classes.Recipe;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.FieldValue;
+
+import java.util.ArrayList;
+
+public class CommentsFragment extends Fragment {
+
+    private FirebaseServices fbs;
+    private RecyclerView rvComments;
+    private CommentAdapter adapter;
+    private ArrayList<Comment> commentList;
+    private EditText etComment;
+    private MaterialButton btnSend;
+
+    private String recipeId;
+    private String currentUserId;
+
+    public CommentsFragment() {}
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // استلام البيانات اللي بعتيها من RecipeDetailsFragment
+        if (getArguments() != null) {
+            recipeId = getArguments().getString("recipeId");
+            currentUserId = getArguments().getString("userId");
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_comments, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init(view);
+    }
+
+    private void init(View view) {
+        fbs = FirebaseServices.getInstance();
+
+        // الربط مع الـ IDs الموجودة في الـ XML تبعك
+        rvComments = view.findViewById(R.id.rvCommentsPage);
+        etComment = view.findViewById(R.id.etCommentPage);
+        btnSend = view.findViewById(R.id.btnPostCommentPage);
+
+        commentList = new ArrayList<>();
+        adapter = new CommentAdapter(getContext(), commentList);
+        rvComments.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvComments.setAdapter(adapter);
+
+        // إذا المستخدم مش مسجل دخول، بنخفي شريط التعليق
+        if (fbs.getAuth().getCurrentUser() == null) {
+            if (view.findViewById(R.id.commentInputCard) != null) {
+                view.findViewById(R.id.commentInputCard).setVisibility(View.GONE);
+            }
+        }
+
+        loadComments();
+
+        btnSend.setOnClickListener(v -> {
+            String text = etComment.getText().toString().trim();
+            if (!text.isEmpty()) {
+                addComment(text);
+            }
+        });
+    }
+
+    private void loadComments() {
+        if (recipeId == null) return;
+
+        fbs.getFire().collection("recipes").document(recipeId)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Toast.makeText(getContext(), "Error loading comments", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (value != null && value.exists()) {
+                        commentList.clear();
+                        // تحويل الوثيقة لكائن Recipe وجلب قائمة التعليقات منه
+                        Recipe recipe = value.toObject(Recipe.class);
+                        if (recipe != null && recipe.getComments() != null) {
+                            commentList.addAll(recipe.getComments());
+                        }
+                        adapter.notifyDataSetChanged();
+
+                        // التمرير لآخر تعليق
+                        if (commentList.size() > 0) {
+                            rvComments.smoothScrollToPosition(commentList.size() - 1);
+                        }
+                    }
+                });
+    }
+
+    private void addComment(String text) {
+        if (fbs.getAuth().getCurrentUser() == null) return;
+
+        String name = fbs.getAuth().getCurrentUser().getDisplayName();
+        if (name == null || name.isEmpty()) {
+            name = fbs.getAuth().getCurrentUser().getEmail().split("@")[0];
+        }
+
+        // System.currentTimeMillis() بتعطينا الوقت الحالي بالملي ثانية
+        Comment newComment = new Comment(text, name, currentUserId, recipeId, System.currentTimeMillis());
+
+        fbs.getFire().collection("recipes").document(recipeId)
+                .update("comments", FieldValue.arrayUnion(newComment))
+                .addOnSuccessListener(aVoid -> etComment.setText(""))
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show());
     }
 }

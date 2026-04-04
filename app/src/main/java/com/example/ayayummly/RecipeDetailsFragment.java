@@ -384,6 +384,7 @@ import androidx.fragment.app.Fragment;
 import com.example.ayayummly.classes.FirebaseServices;
 import com.example.ayayummly.classes.Recipe;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -503,24 +504,59 @@ public class RecipeDetailsFragment extends Fragment {
         btnEditRecipe = view.findViewById(R.id.btnEditRecipe);
         btnDeleteRecipe = view.findViewById(R.id.btnDeleteRecipe);
 
+        // 1. ربط المتغير بالـ ID الجديد (اللي صار على الكارد نفسه)
         tvViewComments = view.findViewById(R.id.tvViewComments);
-        tvViewComments.setOnClickListener(v -> {
-            // 1. إنشاء نسخة من فرجمنت التعليقات الجديد
-            CommentsFragment commentsFragment = new CommentsFragment();
+        if (tvViewComments != null) {
+            tvViewComments.setOnClickListener(v -> {
+                if (myRecipe != null && myRecipe.getId() != null) {
 
-            // 2. تمرير ID الوصفة عشان الصفحة الجديدة تعرف أي تعليقات تجيب
-            Bundle args = new Bundle();
-            args.putString("recipeId", myRecipe.getId());
-            commentsFragment.setArguments(args);
+                    // 1. فحص المستخدم (التعديل اللي حكيتي عنه)
+                    FirebaseUser user = fbs.getAuth().getCurrentUser();
+                    String currentUserId = (user != null) ? user.getUid() : "guest";
 
-            // 3. الانتقال للشاشة الجديدة
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frameLayout, commentsFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
+                    // 2. تجهيز الفراجمنت الجديد
+                    CommentsFragment commentsFragment = new CommentsFragment();
+                    Bundle args = new Bundle();
+                    args.putString("recipeId", myRecipe.getId());
+                    args.putString("userId", currentUserId); // بنبعت الـ ID للفراجمنت الجاي
+                    commentsFragment.setArguments(args);
+
+                    // 3. الانتقال
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frameLayout, commentsFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        }
+/*
+        if (tvViewComments != null) {
+            tvViewComments.setOnClickListener(v -> {
+                // 2. فحص أمان: نتأكد أن الوصفة والـ ID موجودين عشان ما يصير كراش
+                if (myRecipe != null && myRecipe.getId() != null) {
+
+                    // تجهيز الفراجمنت الجديد
+                    CommentsFragment commentsFragment = new CommentsFragment();
+                    Bundle args = new Bundle();
+                    args.putString("recipeId", myRecipe.getId());
+                    commentsFragment.setArguments(args);
+
+                    // 3. عملية الانتقال
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frameLayout, commentsFragment)
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    // رسالة تنبيه لو البيانات ناقصة
+                    Toast.makeText(getContext(), "Recipe details are still loading...", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
 
+
+
+        */
 // ⭐ إظهار أو إخفاء أزرار التعديل والحذف حسب صاحب الوصفة
         if (fbs.getAuth().getCurrentUser() != null) {
             String currentUserId = fbs.getAuth().getCurrentUser().getUid();

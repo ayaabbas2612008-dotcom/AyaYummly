@@ -5,15 +5,17 @@ public class Comment {
     private String userName;
     private String userId;
     private String recipeId;
+    private long date;
 
     // Constructor فاضي - أساسي للفايربيس
     public Comment() {}
 
-    public Comment(String commentText, String userName, String userId, String recipeId) {
+    public Comment(String commentText, String userName, String userId, String recipeId, long date) {
         this.commentText = commentText;
         this.userName = userName;
         this.userId = userId;
         this.recipeId = recipeId;
+        this.date = date;
     }
 
     // Getters & Setters
@@ -28,4 +30,9 @@ public class Comment {
 
     public String getRecipeId() { return recipeId; }
     public void setRecipeId(String recipeId) { this.recipeId = recipeId; }
+    public long getDate() { return date; }
+    public void setDate(long date) { this.date = date; }
+
 }
+
+

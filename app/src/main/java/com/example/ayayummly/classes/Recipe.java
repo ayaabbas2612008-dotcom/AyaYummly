@@ -204,9 +204,12 @@ public class Recipe implements Parcelable {
     // ⭐ الحقل الجديد للمفضلة الشخصية
     private ArrayList<String> favUsers;
 
+    private ArrayList<Comment> comments;
+
     // 1. الكونسيركتور الفارغ (ضروري لـ Firebase)
     public Recipe() {
         this.favUsers = new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
 
     // 2. الكونسيركتور الكامل (لإضافة وصفة جديدة)
@@ -316,6 +319,15 @@ public class Recipe implements Parcelable {
         return favUsers;
     }
     public void setFavUsers(ArrayList<String> favUsers) { this.favUsers = favUsers; }
+
+    public ArrayList<Comment> getComments() {
+        if (comments == null) comments = new ArrayList<>();
+        return comments;
+    }
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
+    }
+
 
     @Override
     public int describeContents() { return 0; }
